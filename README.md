@@ -54,7 +54,7 @@ KOK="$HOME/ozel-yol" bash kur.sh
 Bileşenleri çatı olmadan ayrı ayrı incelemek veya kurmak için:
 
 - **Hafıza Sistemi:** https://github.com/MrMerkus/MMS
-- **Ofis:** https://github.com/MrMerkus/Ofis
+- **Ofis (Office):** https://github.com/MrMerkus/Office
 
 ## Gereksinimler
 

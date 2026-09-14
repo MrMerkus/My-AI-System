@@ -80,7 +80,7 @@ if [ "$KUR_HAFIZA" -eq 1 ]; then
 fi
 
 if [ "$KUR_OFIS" -eq 1 ]; then
-  klonla_veya_guncelle "https://github.com/MrMerkus/Ofis.git" "$KOK/ofis" "Ofis"
+  klonla_veya_guncelle "https://github.com/MrMerkus/Office.git" "$KOK/ofis" "Ofis"
 fi
 
 # 2. Ofis kurulum betiği varsa çalıştır
