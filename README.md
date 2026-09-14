@@ -2,6 +2,26 @@
 
 Kişisel yapay zeka çalışma ortamı ve hafıza altyapısını birleştiren çatı (umbrella) deposu.
 
+## Kurulum (1 dakika)
+
+Claude Code'a doğrudan şu cümleyi yapıştırın:
+
+> https://github.com/MrMerkus/My-AI-System deposundaki KURULUM.md dosyasını oku ve beni kur.
+
+Claude Code sizinle adım adım konuşarak sistemi yapılandıracak ve kurulumu tamamlayacaktır.
+
+### Elle kurmak isteyenler
+
+Terminal üzerinden doğrudan kurmak için:
+
+```bash
+git clone https://github.com/MrMerkus/My-AI-System.git
+cd My-AI-System
+bash kur.sh
+```
+
+Özelleştirilmiş parametrelerle çalıştırmak için `bash kur.sh --yardim` komutunu inceleyebilirsiniz.
+
 ## Ne bu?
 
 My AI System, iki bağımsız açık kaynaklı sistemi tek bir yapı altında birleştiren hafif bir orkestrasyon katmanıdır:
@@ -22,7 +42,7 @@ Bu çatı depo kod kopyalamaz; yalnızca iki depoyu çeker ve birbirine bağlar.
   (Obsidian Vault + Bellek)   (Projeler + Ajan Masası)
 ```
 
-Kurulum sonrası disk üzerindeki klasör yerleşimi:
+Kurulum sırasında yapılan tüm yapılandırma tercihleri `~/.config/my-ai-system/sistem.json` dosyasında saklanır. Disk üzerindeki klasör yerleşimi:
 
 ```
 $KOK (Varsayılan: $HOME/yapay-zeka-sistemim)
@@ -31,22 +51,6 @@ $KOK (Varsayılan: $HOME/yapay-zeka-sistemim)
 ├── OKU.md            # İki kardeş klasörü açıklayan kılavuz
 ├── CLAUDE.md -> hafiza/CLAUDE.md
 └── .claude   -> hafiza/.claude
-```
-
-## Kurulum
-
-Sistemi kurmak için depoyu klonlayıp kurulum betiğini çalıştırın:
-
-```bash
-git clone https://github.com/MrMerkus/My-AI-System.git
-cd My-AI-System
-bash kur.sh
-```
-
-Farklı bir hedef dizine kurmak için:
-
-```bash
-KOK="$HOME/ozel-yol" bash kur.sh
 ```
 
 ## Tek tek kurmak isteyenler
@@ -71,7 +75,7 @@ Temel gereksinimler:
 
 ## Güvenlik notu
 
-`kur.sh` betiği yalnızca bu dokümanda listelenen genel erişime açık depoları klonlar ve depoların kendi kurulum betiklerini yürütür. Dışarıdan bilinmeyen ikili dosyalar indirmez ve sistem dosyalarını değiştirmez. Çalıştırmadan önce betiği inceleyebilirsiniz.
+`kur.sh` betiği yalnızca bu dokümanda listelenen genel erişime açık depoları klonlar ve depoların kendi kurulum betiklerini yürütür. Yapılan değişiklikler öncesinde `~/.config/my-ai-system/` altında otomatik yedek alınır. Dışarıdan bilinmeyen ikili dosyalar indirilmez ve sistem dosyaları değiştirilmez.
 
 ## Lisans
 
