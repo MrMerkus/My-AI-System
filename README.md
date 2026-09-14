@@ -77,6 +77,12 @@ Temel gereksinimler:
 
 `kur.sh` betiği yalnızca bu dokümanda listelenen genel erişime açık depoları klonlar ve depoların kendi kurulum betiklerini yürütür. Yapılan değişiklikler öncesinde `~/.config/my-ai-system/` altında otomatik yedek alınır. Dışarıdan bilinmeyen ikili dosyalar indirilmez ve sistem dosyaları değiştirilmez.
 
+## Araç uyumluluğu
+
+Bugün **Claude Code**'da tam çalışır ve kurulum onunla test edildi. **Codex** ve **Antigravity**
+için hafıza köprüleri var ama kısmi; **Gemini CLI** ve **Cursor** desteği planlandı. Ayrıntılı
+tablo ve yol haritası: [ARAC-UYUMLULUK.md](ARAC-UYUMLULUK.md)
+
 ## Lisans
 
 MIT Lisansı — Detaylar için `LICENSE` dosyasına bakınız.
