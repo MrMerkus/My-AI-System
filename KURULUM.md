@@ -71,6 +71,9 @@ Yüklenen yetenekleri listele: `ls ~/.claude/skills`
 
 Başarısız olan veya uyarı veren her adımı kullanıcıya dürüstçe raporla.
 
+
+> **Beklenen tek hata:** Yeni kurulumda denetçi "uzak depo tanımlı değil — yedek yok" der ve testlerden biri (denetçi) bu yüzden kalır. Bu bilinçli: şablon deposunun bağlantısı güvenlik için koparıldı. Kullanıcıya bunu hata olarak değil, Adım 7'deki private yedek deposunu bağlama hatırlatması olarak anlat. Başka bir ❌ varsa onu gerçek hata olarak raporla.
+
 ## Adım 7: Sonraki Adımlar
 
 Kullanıcıya kurulum sonrasındaki şu adımları aktar:
