@@ -293,10 +293,16 @@ if [ "$KUR_HAFIZA" -eq 1 ]; then
   if [ -d "$HAFIZA" ]; then
     echo ">> Hafıza dizini zaten mevcut: $HAFIZA (klonlama atlandı)"
   else
-    echo ">> Hafıza Sistemi klonlanıyor: $REPO_MMS -> $HAFIZA..."
-    git clone "$REPO_MMS" "$HAFIZA"
-    git -C "$HAFIZA" remote remove origin
-    echo ">> Güvenlik için genel kalıp uzak deposu (origin) kaldırıldı; kişisel yedekleriniz genel depoya gitmeyecek."
+    if [ -d "$REPO_MMS" ]; then
+      # Tek depodan kurulum: kaynak yerel klasör, kopyalanır ve yeni bir git geçmişi başlar.
+      echo ">> Hafıza Sistemi kopyalanıyor: $REPO_MMS -> $HAFIZA..."
+      cp -a "$REPO_MMS" "$HAFIZA"; rm -rf "$HAFIZA/.git"; git -C "$HAFIZA" init -q -b main
+    else
+      echo ">> Hafıza Sistemi klonlanıyor: $REPO_MMS -> $HAFIZA..."
+      git clone "$REPO_MMS" "$HAFIZA"
+      git -C "$HAFIZA" remote remove origin
+      echo ">> Güvenlik için genel kalıp uzak deposu (origin) kaldırıldı; kişisel yedekleriniz genel depoya gitmeyecek."
+    fi
   fi
 
   if [ -f "$HAFIZA/kurulum/yapilandir.py" ]; then
@@ -323,8 +329,13 @@ if [ "$KUR_OFIS" -eq 1 ]; then
   elif [ -d "$OFIS" ]; then
     echo ">> Uyarı: Ofis dizini zaten mevcut ancak git deposu değil: $OFIS (klonlama atlandı)"
   else
-    echo ">> Ofis klonlanıyor: $REPO_OFFICE -> $OFIS..."
-    git clone "$REPO_OFFICE" "$OFIS"
+    if [ -d "$REPO_OFFICE" ]; then
+      echo ">> Ofis kopyalanıyor: $REPO_OFFICE -> $OFIS..."
+      cp -a "$REPO_OFFICE" "$OFIS"; rm -rf "$OFIS/.git"; git -C "$OFIS" init -q -b main
+    else
+      echo ">> Ofis klonlanıyor: $REPO_OFFICE -> $OFIS..."
+      git clone "$REPO_OFFICE" "$OFIS"
+    fi
     if git -C "$OFIS" remote | grep -q "^origin$"; then
       git -C "$OFIS" remote rename origin upstream
       echo ">> Ofis uzak deposu (origin) 'upstream' olarak yeniden adlandırıldı."
@@ -336,6 +347,36 @@ if [ "$KUR_OFIS" -eq 1 ]; then
     OFIS="$OFIS" HAFIZA="$HAFIZA" bash "$OFIS/kur.sh"
   fi
 fi
+
+# 2b. Tek yol ayarı (~/.config/beyin): kancalar vault'u, arayüz oturum kökünü buradan bulur.
+# Taşımada yalnız bu kısayollar değişir. Varsa eskisi yedeklenir.
+BEYIN_AYAR="$HOME/.config/beyin"
+mkdir -p "$BEYIN_AYAR"
+bagla() {  # bagla <ad> <hedef>
+  local yol="$BEYIN_AYAR/$1"
+  if [ "$(readlink "$yol" 2>/dev/null)" != "$2" ]; then
+    { [ -e "$yol" ] || [ -L "$yol" ]; } && { yedek_al "$yol" "beyin-$1"; rm -f "$yol"; }
+    ln -s "$2" "$yol"; echo ">> Yol ayarı: $yol -> $2"
+  fi
+}
+bagla kok "$KOK"
+[ "$KUR_HAFIZA" -eq 1 ] && bagla vault "$HAFIZA"
+# Farkındalık ofisi ~/ofis'ten okur; yoksa kurulan ofise kısayol açılır (varsa dokunulmaz).
+if [ "$KUR_OFIS" -eq 1 ] && [ ! -e "$HOME/ofis" ] && [ "$OFIS" != "$HOME/ofis" ]; then
+  ln -s "$OFIS" "$HOME/ofis"; echo ">> Kısayol: ~/ofis -> $OFIS"
+fi
+
+# 2c. İsteğe bağlı bileşenler (tek depodan kurulumda dolu gelir): motor, ajans, arayüz.
+bilesen() {  # bilesen <kaynak> <hedef> [yol-ayarı-adı]
+  [ -n "$1" ] && [ -d "$1" ] || return 0
+  if [ -d "$2" ]; then echo ">> Zaten var, atlandı: $2"
+  else cp -a "$1" "$2"; rm -rf "$2/.git"; git -C "$2" init -q -b main; echo ">> Kuruldu: $2"; fi
+  [ -n "${3:-}" ] && bagla "$3" "$2"
+  return 0
+}
+bilesen "${MAIS_KAYNAK_MOTOR:-}" "$KOK/motor" motor
+[ "$KUR_OFIS" -eq 1 ] && bilesen "${MAIS_KAYNAK_AJANS:-}" "$OFIS/ajans" ajans
+[ "$KUR_OFIS" -eq 1 ] && bilesen "${MAIS_KAYNAK_ARAYUZ:-}" "$OFIS/deha-arayuz"
 
 # 3. Kök Dizin Sembolik Bağları
 if [ "$KUR_HAFIZA" -eq 1 ]; then
@@ -416,6 +457,10 @@ if [ "$KUR_HAFIZA" -eq 1 ]; then
   echo "3. Hafıza sisteminizi yedeklemek için özel (private) bir git deposu açıp bağlayın:"
   echo "   git -C \"$HAFIZA\" remote add origin <ozel-repo-adresi>"
 fi
-echo "4. İsteğe bağlı ek CLI araçları: agy (Antigravity), codex (OpenAI Codex)"
+echo "4. İsteğe bağlı ek CLI araçları: codex (OpenAI Codex)"
+if [ -d "${OFIS:-/yok}/deha-arayuz" ]; then
+  echo "5. Masaüstü arayüzü (Electron + avatar):"
+  echo "   cd \"$OFIS/deha-arayuz\" && npm install && npm start"
+fi
 echo ""
 echo "Detaylı bilgi için '$KOK/OKU.md' dosyasını inceleyebilirsiniz."
